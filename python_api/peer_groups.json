@@ -1,0 +1,595 @@
+{
+  "groups": [
+    {
+      "id": "semiconductors",
+      "name": "Semiconductors",
+      "category": "Industries",
+      "benchmark": "SMH",
+      "members": [
+        "NVDA",
+        "AMD",
+        "AVGO",
+        "TSM",
+        "INTC",
+        "MU",
+        "QCOM",
+        "TXN",
+        "MRVL",
+        "ON",
+        "AMAT",
+        "ASML"
+      ]
+    },
+    {
+      "id": "software",
+      "name": "Software / SaaS",
+      "category": "Industries",
+      "benchmark": "IGV",
+      "members": [
+        "MSFT",
+        "CRM",
+        "ORCL",
+        "ADBE",
+        "NOW",
+        "SNOW",
+        "PLTR",
+        "INTU",
+        "PANW",
+        "CRWD",
+        "DDOG",
+        "TEAM"
+      ]
+    },
+    {
+      "id": "mega_tech",
+      "name": "Mega-cap Tech",
+      "category": "Industries",
+      "benchmark": "QQQ",
+      "members": [
+        "AAPL",
+        "MSFT",
+        "GOOGL",
+        "AMZN",
+        "META",
+        "NVDA",
+        "TSLA",
+        "NFLX"
+      ]
+    },
+    {
+      "id": "banks",
+      "name": "Banks / Brokers",
+      "category": "Industries",
+      "benchmark": "XLF",
+      "members": [
+        "JPM",
+        "BAC",
+        "WFC",
+        "C",
+        "GS",
+        "MS",
+        "USB",
+        "PNC",
+        "TFC",
+        "SCHW"
+      ]
+    },
+    {
+      "id": "energy",
+      "name": "Energy",
+      "category": "Industries",
+      "benchmark": "XLE",
+      "members": [
+        "XOM",
+        "CVX",
+        "COP",
+        "SLB",
+        "EOG",
+        "MPC",
+        "PSX",
+        "VLO",
+        "OXY",
+        "HAL"
+      ]
+    },
+    {
+      "id": "biotech",
+      "name": "Biotech",
+      "category": "Industries",
+      "benchmark": "XBI",
+      "members": [
+        "AMGN",
+        "GILD",
+        "VRTX",
+        "REGN",
+        "MRNA",
+        "BIIB",
+        "ALNY",
+        "ILMN"
+      ]
+    },
+    {
+      "id": "pharma_healthcare",
+      "name": "Pharma / Healthcare",
+      "category": "Industries",
+      "benchmark": "XLV",
+      "members": [
+        "LLY",
+        "JNJ",
+        "PFE",
+        "MRK",
+        "ABBV",
+        "BMY",
+        "UNH",
+        "TMO",
+        "ABT"
+      ]
+    },
+    {
+      "id": "retail",
+      "name": "Retail",
+      "category": "Industries",
+      "benchmark": "XRT",
+      "members": [
+        "WMT",
+        "TGT",
+        "COST",
+        "HD",
+        "LOW",
+        "TJX",
+        "ROST",
+        "DG",
+        "BBY"
+      ]
+    },
+    {
+      "id": "airlines",
+      "name": "Airlines",
+      "category": "Industries",
+      "benchmark": "JETS",
+      "members": [
+        "DAL",
+        "UAL",
+        "AAL",
+        "LUV",
+        "ALK",
+        "JBLU"
+      ]
+    },
+    {
+      "id": "payments_fintech",
+      "name": "Payments / Fintech",
+      "category": "Industries",
+      "benchmark": "XLF",
+      "members": [
+        "V",
+        "MA",
+        "AXP",
+        "PYPL",
+        "COIN",
+        "HOOD",
+        "SOFI",
+        "AFRM"
+      ]
+    },
+    {
+      "id": "autos_ev",
+      "name": "Autos / EV",
+      "category": "Industries",
+      "benchmark": "CARZ",
+      "members": [
+        "TSLA",
+        "RIVN",
+        "LCID",
+        "GM",
+        "F",
+        "NIO",
+        "XPEV",
+        "LI"
+      ]
+    },
+    {
+      "id": "gold_miners",
+      "name": "Gold Miners",
+      "category": "Industries",
+      "benchmark": "GDX",
+      "members": [
+        "NEM",
+        "GOLD",
+        "AEM",
+        "KGC",
+        "AU",
+        "WPM",
+        "FNV"
+      ]
+    },
+    {
+      "id": "defense",
+      "name": "Defense / Aerospace",
+      "category": "Industries",
+      "benchmark": "ITA",
+      "members": [
+        "LMT",
+        "RTX",
+        "NOC",
+        "GD",
+        "BA",
+        "LHX",
+        "HII"
+      ]
+    },
+    {
+      "id": "reits",
+      "name": "REITs",
+      "category": "Industries",
+      "benchmark": "XLRE",
+      "members": [
+        "PLD",
+        "AMT",
+        "EQIX",
+        "SPG",
+        "O",
+        "PSA",
+        "CCI",
+        "DLR"
+      ]
+    },
+    {
+      "id": "utilities",
+      "name": "Utilities",
+      "category": "Industries",
+      "benchmark": "XLU",
+      "members": [
+        "NEE",
+        "DUK",
+        "SO",
+        "D",
+        "AEP",
+        "EXC",
+        "SRE",
+        "XEL"
+      ]
+    },
+    {
+      "id": "sector_etfs",
+      "name": "S&P Sector ETFs",
+      "category": "Industries",
+      "benchmark": "SPY",
+      "members": [
+        "XLK",
+        "XLF",
+        "XLE",
+        "XLV",
+        "XLI",
+        "XLP",
+        "XLY",
+        "XLU",
+        "XLB",
+        "XLRE",
+        "XLC"
+      ]
+    },
+    {
+      "id": "btc_miners",
+      "name": "Bitcoin Miners / AI Pivot",
+      "category": "Crypto",
+      "benchmark": "WGMI",
+      "members": [
+        "MARA",
+        "RIOT",
+        "CLSK",
+        "CORZ",
+        "IREN",
+        "CIFR",
+        "WULF",
+        "HUT",
+        "BTDR",
+        "HIVE",
+        "BITF",
+        "BTBT"
+      ],
+      "notes": "Trade like leveraged BTC plus power/data-center infrastructure plays."
+    },
+    {
+      "id": "crypto_treasury",
+      "name": "Crypto Treasury / Balance Sheet",
+      "category": "Crypto",
+      "benchmark": "IBIT",
+      "members": [
+        "MSTR",
+        "SMLR",
+        "GLXY",
+        "BKKT"
+      ],
+      "notes": "Holding crypto or crypto-linked balance-sheet exposure. MSTR best known; SMLR/BKKT speculative."
+    },
+    {
+      "id": "crypto_exchanges",
+      "name": "Crypto Exchanges / Fin Infra",
+      "category": "Crypto",
+      "benchmark": "ARKF",
+      "members": [
+        "COIN",
+        "HOOD",
+        "PYPL",
+        "XYZ",
+        "NU",
+        "CME",
+        "IBKR"
+      ],
+      "notes": "Exchanges, brokers, and crypto financial infrastructure. XYZ = Block (formerly SQ)."
+    },
+    {
+      "id": "crypto_infra_hw",
+      "name": "Crypto-adjacent Hardware / DC",
+      "category": "Crypto",
+      "benchmark": "SMH",
+      "members": [
+        "NVDA",
+        "AMD",
+        "SMCI",
+        "APLD",
+        "VRT",
+        "ETN"
+      ],
+      "notes": "Less pure crypto; benefits when mining, AI hosting, and data-center power demand overlap."
+    },
+    {
+      "id": "drones_tactical",
+      "name": "Small / Tactical Drones",
+      "category": "Defense & Drones",
+      "benchmark": "ITA",
+      "members": [
+        "RCAT",
+        "ONDS",
+        "AVAV",
+        "KTOS",
+        "UMAC",
+        "PDYN",
+        "OPTT"
+      ],
+      "notes": "RCAT Black Widow (Army SRR), ONDS counter-UAS/Iron Drone. UMAC/PDYN/OPTT very speculative."
+    },
+    {
+      "id": "counter_uas",
+      "name": "Counter-UAS / Air Defense",
+      "category": "Defense & Drones",
+      "benchmark": "ITA",
+      "members": [
+        "ONDS",
+        "AVAV",
+        "DRS",
+        "KTOS",
+        "RTX",
+        "LMT",
+        "NOC"
+      ],
+      "notes": "Counter-drone, directed energy, air defense. AVAV Freedom Eagle C-UAS missile."
+    },
+    {
+      "id": "naval_unmanned",
+      "name": "Naval / Unmanned Maritime",
+      "category": "Defense & Drones",
+      "benchmark": "ITA",
+      "members": [
+        "OPTT",
+        "KITT",
+        "TXT",
+        "LHX",
+        "HII",
+        "GD"
+      ],
+      "notes": "Few public pure plays. Watch private: Saronic, Anduril, Shield AI, Skydio, Epirus, Helsing."
+    },
+    {
+      "id": "defense_electronics",
+      "name": "Defense Electronics / RF / EW",
+      "category": "Defense & Drones",
+      "benchmark": "ITA",
+      "members": [
+        "MRCY",
+        "DRS",
+        "VSEC",
+        "HEI",
+        "TDG",
+        "CW",
+        "ATRO",
+        "MOG-A"
+      ],
+      "notes": "Picks-and-shovels: sensors, RF, electronic warfare, aerospace components."
+    },
+    {
+      "id": "photonics_optics",
+      "name": "Photonics / AI Data-center Optics",
+      "category": "Semis & Photonics",
+      "benchmark": "SMH",
+      "members": [
+        "COHR",
+        "LITE",
+        "CIEN",
+        "GLW",
+        "FN",
+        "AAOI",
+        "POET",
+        "LWLG",
+        "IPGP"
+      ],
+      "notes": "Next layer of AI infrastructure. NVDA reportedly investing in LITE/COHR photonics."
+    },
+    {
+      "id": "silicon_photonics",
+      "name": "Silicon Photonics / Interconnect",
+      "category": "Semis & Photonics",
+      "benchmark": "SMH",
+      "members": [
+        "POET",
+        "LWLG",
+        "COHR",
+        "LITE",
+        "AAOI",
+        "FN",
+        "MRVL",
+        "AVGO"
+      ],
+      "notes": "Optical engines, interposers, transceivers. LWLG very speculative."
+    },
+    {
+      "id": "power_semis",
+      "name": "GaN / SiC Power Semis",
+      "category": "Semis & Photonics",
+      "benchmark": "SMH",
+      "members": [
+        "NVTS",
+        "WOLF",
+        "POWI",
+        "AXTI",
+        "AEHR",
+        "ON",
+        "STM",
+        "IFNNY"
+      ],
+      "notes": "AI data-center power, EV, grid electrification. WOLF distressed/speculative."
+    },
+    {
+      "id": "rf_compound_semis",
+      "name": "RF / Compound Semis",
+      "category": "Semis & Photonics",
+      "benchmark": "SMH",
+      "members": [
+        "MTSI",
+        "QRVO",
+        "SWKS",
+        "ADI",
+        "TXN",
+        "AXTI",
+        "VSH",
+        "IPGP"
+      ],
+      "notes": "Defense comms, satellites, 5G, radar, EW overlap."
+    },
+    {
+      "id": "semicap_niche",
+      "name": "Semi Equipment / Test (Niche)",
+      "category": "Semis & Photonics",
+      "benchmark": "SMH",
+      "members": [
+        "AEHR",
+        "ACMR",
+        "ONTO",
+        "KLIC",
+        "VECO",
+        "CAMT",
+        "FORM",
+        "COHU"
+      ],
+      "notes": "Smaller equipment/test names: wafer test, cleaning, inspection, packaging tools."
+    },
+    {
+      "id": "adv_packaging",
+      "name": "Advanced Packaging / Chiplets",
+      "category": "Semis & Photonics",
+      "benchmark": "SMH",
+      "members": [
+        "AMKR",
+        "CAMT",
+        "KLIC",
+        "ONTO",
+        "TER",
+        "FORM",
+        "BESI.AS"
+      ],
+      "notes": "Hybrid bonding, probe cards, metrology. BESI.AS is Amsterdam-listed (data may be spotty)."
+    },
+    {
+      "id": "basket_crypto",
+      "name": "Bucket: Crypto",
+      "category": "My Buckets",
+      "benchmark": "IBIT",
+      "members": [
+        "MARA",
+        "RIOT",
+        "CLSK",
+        "CORZ",
+        "IREN",
+        "CIFR",
+        "WULF",
+        "HUT",
+        "BTDR",
+        "COIN",
+        "MSTR",
+        "GLXY"
+      ]
+    },
+    {
+      "id": "basket_drones",
+      "name": "Bucket: Drones / Defense",
+      "category": "My Buckets",
+      "benchmark": "ITA",
+      "members": [
+        "RCAT",
+        "ONDS",
+        "AVAV",
+        "KTOS",
+        "DRS",
+        "MRCY",
+        "PDYN",
+        "UMAC",
+        "OPTT",
+        "KITT"
+      ]
+    },
+    {
+      "id": "basket_photonics",
+      "name": "Bucket: Photonics / AI Optics",
+      "category": "My Buckets",
+      "benchmark": "SMH",
+      "members": [
+        "COHR",
+        "LITE",
+        "CIEN",
+        "FN",
+        "AAOI",
+        "POET",
+        "LWLG",
+        "GLW",
+        "MRVL"
+      ]
+    },
+    {
+      "id": "basket_specialty_semis",
+      "name": "Bucket: Small Specialty Semis",
+      "category": "My Buckets",
+      "benchmark": "SMH",
+      "members": [
+        "NVTS",
+        "WOLF",
+        "AEHR",
+        "AXTI",
+        "MTSI",
+        "ACMR",
+        "ONTO",
+        "KLIC",
+        "VECO",
+        "CAMT"
+      ]
+    },
+    {
+      "id": "basket_defense_semi",
+      "name": "Bucket: Defense \u00d7 Semi",
+      "category": "My Buckets",
+      "benchmark": "ITA",
+      "members": [
+        "MTSI",
+        "QRVO",
+        "ADI",
+        "MRCY",
+        "DRS",
+        "KTOS",
+        "AVAV",
+        "LHX",
+        "HEI",
+        "CW"
+      ]
+    }
+  ]
+}

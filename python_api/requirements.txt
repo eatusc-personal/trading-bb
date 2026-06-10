@@ -1,0 +1,9 @@
+# Python API dependencies. Recreate the venv with:
+#   python3 -m venv .venv && .venv/bin/pip install -r python_api/requirements.txt
+# Versions pinned to the working dev environment (2026-06).
+openbb==4.7.1
+fastapi==0.128.8
+uvicorn==0.40.0
+pandas==2.3.3
+numpy==2.4.3
+pydantic==2.12.5

@@ -1,0 +1,122 @@
+[
+  {
+    "alias_symbol": "FB",
+    "canonical_symbol": "META",
+    "effective_from": "2022-06-09",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "SQ",
+    "canonical_symbol": "XYZ",
+    "effective_from": "2021-12-10",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "PCLN",
+    "canonical_symbol": "BKNG",
+    "effective_from": "2018-02-27",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "BRK-B",
+    "canonical_symbol": "BRK.B",
+    "effective_from": "2000-01-01",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "BRKB",
+    "canonical_symbol": "BRK.B",
+    "effective_from": "2000-01-01",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "BRK-A",
+    "canonical_symbol": "BRK.A",
+    "effective_from": "2000-01-01",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "BRKA",
+    "canonical_symbol": "BRK.A",
+    "effective_from": "2000-01-01",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "BF-B",
+    "canonical_symbol": "BF.B",
+    "effective_from": "2000-01-01",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "BFB",
+    "canonical_symbol": "BF.B",
+    "effective_from": "2000-01-01",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "RDS-A",
+    "canonical_symbol": "SHEL",
+    "effective_from": "2022-01-31",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "RDS-B",
+    "canonical_symbol": "SHEL",
+    "effective_from": "2022-01-31",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "RDSA",
+    "canonical_symbol": "SHEL",
+    "effective_from": "2022-01-31",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "RDSB",
+    "canonical_symbol": "SHEL",
+    "effective_from": "2022-01-31",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "QQQQ",
+    "canonical_symbol": "QQQ",
+    "effective_from": "2011-03-23",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "UTX",
+    "canonical_symbol": "RTX",
+    "effective_from": "2020-04-03",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "DWDP",
+    "canonical_symbol": "DOW",
+    "effective_from": "2019-04-01",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "ANTM",
+    "canonical_symbol": "ELV",
+    "effective_from": "2022-06-28",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "TWX",
+    "canonical_symbol": "T",
+    "effective_from": "2018-06-15",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "DISCA",
+    "canonical_symbol": "WBD",
+    "effective_from": "2022-04-11",
+    "source": "seed_manual"
+  },
+  {
+    "alias_symbol": "DISCK",
+    "canonical_symbol": "WBD",
+    "effective_from": "2022-04-11",
+    "source": "seed_manual"
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "name": "openbb-local-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -k -n WEB,API -c cyan,green \"npm:dev:web\" \"npm:dev:api\"",
+    "dev:web": "next dev",
+    "dev:api": "./.venv/bin/uvicorn python_api.main:app --reload --host 127.0.0.1 --port 8001",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint app components lib --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "smoke:endpoints": "bash scripts/smoke_endpoints.sh",
+    "metrics:social-latency": "python3 scripts/social_latency_sample.py --url ${WEB_BASE:-http://127.0.0.1:3500}/api/social/sentiment?limit=5 --samples 5",
+    "metrics:phase2-repro": "python3 scripts/phase2_repro_check.py --base ${WEB_BASE:-http://127.0.0.1:3500} --runs 3 --symbols AAPL,FB,SQ,BRK-B",
+    "metrics:phase3-eval": "python3 scripts/phase3_eval.py --base ${WEB_BASE:-http://127.0.0.1:3500} --limit 20 --benchmark docs/program/PHASE3_BENCHMARK.json",
+    "metrics:phase5-event-study": "python3 scripts/phase5_event_study.py --base ${WEB_BASE:-http://127.0.0.1:3500} --horizons 1,3,5 --benchmark SPY --top 20",
+    "metrics:phase6-security": "python3 scripts/phase6_security_check.py --web-base ${WEB_BASE:-http://127.0.0.1:3500} --api-base http://127.0.0.1:8001 --api-key ${SOCIAL_API_KEY:-} --burst 135 --timeout 120"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "concurrently": "^9.2.1",
+    "lucide-react": "^0.577.0",
+    "next": "16.1.7",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "recharts": "^3.8.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.7",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
