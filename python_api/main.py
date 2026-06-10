@@ -6447,3 +6447,10 @@ def alerts(symbols: str | None = Query(default=None)) -> dict[str, Any]:
 from .divergence import router as divergence_router  # noqa: E402
 
 app.include_router(divergence_router)
+
+# ---------------------------------------------------------------------------
+# Daily cross-tab report (confluence-ranked opportunities) — python_api/report.py
+# ---------------------------------------------------------------------------
+from .report import router as report_router  # noqa: E402
+
+app.include_router(report_router)

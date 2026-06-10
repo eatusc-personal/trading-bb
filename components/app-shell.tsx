@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Activity, BarChart3, ChartCandlestick, GitCompareArrows, ListFilter, MessagesSquare, Newspaper, Search, Star, Tags } from "lucide-react";
+import { Activity, BarChart3, ChartCandlestick, FileText, GitCompareArrows, ListFilter, MessagesSquare, Newspaper, Search, Star, Tags } from "lucide-react";
 import { FormEvent, useState } from "react";
 import clsx from "clsx";
 
 const navItems = [
   { href: "/", label: "Market", icon: BarChart3 },
+  { href: "/report", label: "Daily Report", icon: FileText },
   { href: "/charts", label: "Chart Board", icon: ChartCandlestick },
   { href: "/news", label: "Headline News", icon: Newspaper },
   { href: "/technical", label: "Technical", icon: Activity },

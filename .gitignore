@@ -53,3 +53,7 @@ __pycache__/
 *.db
 *.db-wal
 *.db-shm
+
+# machine-local runtime artifacts
+/logs/
+.claude/settings.local.json
