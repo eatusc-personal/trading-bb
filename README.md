@@ -1,5 +1,7 @@
 # Trading Dashboard (OpenBB-backed)
 
+[![CI](https://github.com/eatusc/trading-bb/actions/workflows/ci.yml/badge.svg)](https://github.com/eatusc/trading-bb/actions/workflows/ci.yml)
+
 A local, full-stack market-research dashboard: real-time quotes and technicals,
 a **peer-divergence scanner** (leave-one-out z-scores that flag stocks *not*
 moving with their group), a **Reddit/Stocktwits social-sentiment signal-lab**
