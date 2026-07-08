@@ -45,6 +45,7 @@ logger = logging.getLogger("openbb_api")
 
 from .config import *  # noqa: F401,F403 -- env constants + static data tables
 from .cache import get_cached, set_cached
+from .utils import call_openbb_silenced, finite_or, normalize_pct, now_iso, to_float
 
 app = FastAPI(title=APP_NAME, version="1.0.0")
 app.add_middleware(
@@ -67,9 +68,6 @@ _quote_provider_auth_cooldown_until = 0.0
 _provider_state_lock = threading.Lock()
 _provider_cooldown_until: dict[str, float] = {}
 
-
-def now_iso() -> str:
-    return datetime.now(UTC).isoformat()
 
 
 # Only trust X-Forwarded-For when explicitly running behind a proxy that
@@ -2007,43 +2005,6 @@ def validate_symbol(symbol: str) -> str:
     if not SYMBOL_PATTERN.match(value):
         raise HTTPException(status_code=400, detail=f"Invalid symbol: {symbol}")
     return value
-
-
-def normalize_pct(value: Any) -> float | None:
-    if value is None or pd.isna(value):
-        return None
-    pct = float(value)
-    if not math.isfinite(pct):
-        return None
-    if -2 <= pct <= 2:
-        pct *= 100
-    return pct
-
-
-def to_float(value: Any) -> float | None:
-    if value is None or pd.isna(value):
-        return None
-    try:
-        out = float(value)
-        if not math.isfinite(out):
-            return None
-        return out
-    except Exception:
-        return None
-
-
-def call_openbb_silenced(fn: Any, *args: Any, **kwargs: Any) -> Any:
-    # OpenBB/yfinance can emit noisy stderr lines (e.g., Invalid Crumb) on
-    # upstream auth failures. Capture them to keep API logs actionable.
-    buf_out = io.StringIO()
-    buf_err = io.StringIO()
-    with redirect_stdout(buf_out), redirect_stderr(buf_err):
-        return fn(*args, **kwargs)
-
-
-def finite_or(value: Any, fallback: float = 0.0) -> float:
-    parsed = to_float(value)
-    return parsed if parsed is not None else float(fallback)
 
 
 def market_cap_bucket(market_cap: float | None) -> str | None:
