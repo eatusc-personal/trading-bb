@@ -57,3 +57,4 @@ __pycache__/
 # machine-local runtime artifacts
 /logs/
 .claude/settings.local.json
+.pytest_cache/

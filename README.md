@@ -329,6 +329,18 @@ Notes:
 - If `SOCIAL_API_KEY` is set, `/api/social/*` endpoints require auth.
 - Next proxy forwards `SOCIAL_API_KEY` to Python API automatically in server-side requests.
 
+## Tests
+
+```bash
+.venv/bin/pip install -r requirements-dev.txt
+.venv/bin/python -m pytest        # 15 tests, ~6s
+```
+
+`tests/` covers the pure indicator math (SMA/RSI/MACD/RVOL + trigger flags),
+the per-provider budget guard (limits, env overrides, exhaustion), and endpoint
+smoke tests (health, security status, symbol validation) via FastAPI's
+`TestClient` — all offline, no market-data calls.
+
 ## Smoke Test Runbook
 After `npm run dev`, verify key routes:
 
