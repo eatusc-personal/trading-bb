@@ -10,6 +10,17 @@ data, per-provider budget guards, and stale-while-revalidate caching.
 **Stack:** Next.js 16 (App Router, TypeScript, Tailwind) · Python FastAPI ·
 OpenBB + provider routing (TwelveData / FMP / Marketstack) · SQLite.
 
+## Background
+
+This began as an OpenBB-based dashboard and was re-architected from there. The
+market-data layer was replaced with a custom multi-provider router — direct
+TwelveData/FMP/Marketstack calls with automatic failover and per-provider budget
+guards — and the peer-divergence scanner, social-sentiment signal-lab, and
+stale-while-revalidate caching were built on top. OpenBB is retained as one
+fallback source (discovery + yfinance). The Python backend is split into focused
+modules (`providers`, `news`, `social`, `symbol_master`, `db`, `net`, `config`,
+`indicators`, `utils`, `cache`) with a pytest suite.
+
 ## Screenshots
 
 | Market Overview | Divergence Scanner |
