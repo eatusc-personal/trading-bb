@@ -45,6 +45,14 @@ logger = logging.getLogger("openbb_api")
 
 from .config import *  # noqa: F401,F403 -- env constants + static data tables
 from .cache import get_cached, set_cached
+from .net import (
+    fetch_json_url,
+    fetch_text_url,
+    reddit_rate_wait,
+    source_cooldown_remaining_sec,
+    source_record_success,
+    source_record_failure,
+)
 from .utils import call_openbb_silenced, finite_or, normalize_pct, now_iso, to_float
 from .providers import (
     quote_provider_cooldown_remaining_sec,
@@ -84,13 +92,8 @@ app.add_middleware(
 )
 
 _social_db_lock = threading.Lock()
-_social_source_state_lock = threading.Lock()
-_reddit_rate_lock = threading.Lock()
 _rate_limit_lock = threading.Lock()
-_reddit_last_request_ts = 0.0
 _rate_limit_state: dict[str, tuple[float, int]] = {}
-_social_source_failures: dict[str, int] = {}
-_social_source_cooldown_until: dict[str, float] = {}
 
 
 
@@ -709,73 +712,6 @@ def append_mentions_from_rows(mentions: list[dict[str, Any]], rows: list[dict[st
                     "url": row.get("url") or "",
                 }
             )
-
-
-def fetch_json_url(
-    url: str,
-    timeout: int = 8,
-    headers: dict[str, str] | None = None,
-    data: bytes | None = None,
-    method: str | None = None,
-) -> Any:
-    req_headers = {
-        "User-Agent": random.choice(SOCIAL_USER_AGENTS),
-        "Accept": "application/json,text/plain,*/*",
-    }
-    if headers:
-        req_headers.update(headers)
-    req = UrlRequest(
-        url,
-        headers=req_headers,
-        data=data,
-        method=method,
-    )
-    with urlopen(req, timeout=timeout) as resp:
-        raw = resp.read().decode("utf-8", errors="ignore")
-    return json.loads(raw)
-
-
-def fetch_text_url(url: str, timeout: int = 8) -> str:
-    req = UrlRequest(url, headers={"User-Agent": random.choice(SOCIAL_USER_AGENTS)})
-    with urlopen(req, timeout=timeout) as resp:
-        return resp.read().decode("utf-8", errors="ignore")
-
-
-def reddit_rate_wait() -> None:
-    global _reddit_last_request_ts
-    with _reddit_rate_lock:
-        now = time.time()
-        elapsed = now - _reddit_last_request_ts
-        if elapsed < REDDIT_MIN_INTERVAL_SEC:
-            time.sleep(REDDIT_MIN_INTERVAL_SEC - elapsed)
-        _reddit_last_request_ts = time.time()
-
-
-def source_cooldown_remaining_sec(source_key: str) -> int:
-    now = time.time()
-    with _social_source_state_lock:
-        until = float(_social_source_cooldown_until.get(source_key, 0.0))
-    if until <= now:
-        return 0
-    return int(max(0, round(until - now)))
-
-
-def source_record_success(source_key: str) -> None:
-    with _social_source_state_lock:
-        _social_source_failures[source_key] = 0
-        _social_source_cooldown_until[source_key] = 0.0
-
-
-def source_record_failure(source_key: str) -> tuple[int, int]:
-    now = time.time()
-    with _social_source_state_lock:
-        failures = int(_social_source_failures.get(source_key, 0)) + 1
-        _social_source_failures[source_key] = failures
-        if failures >= max(1, SOCIAL_SOURCE_FAIL_THRESHOLD):
-            cooldown_until = now + max(1, SOCIAL_SOURCE_COOLDOWN_SEC)
-            _social_source_cooldown_until[source_key] = cooldown_until
-            return failures, int(max(0, round(cooldown_until - now)))
-    return failures, 0
 
 
 def refresh_symbol_alias_seed(force: bool = False) -> dict[str, Any]:
