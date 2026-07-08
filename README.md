@@ -27,8 +27,6 @@ modules (`providers`, `news`, `social`, `symbol_master`, `db`, `net`, `config`,
 | --- | --- |
 | ![Market overview](docs/media/overview.png) | ![Divergence scanner](docs/media/divergence.png) |
 
-> Add screenshots to `docs/media/` before publishing (run `npm run dev`, then capture the Market and Divergence pages).
-
 ## Quickstart
 
 ```bash
