@@ -265,7 +265,7 @@ export default function MarketPage() {
         <div>
           <h1 className="text-2xl font-bold">Market Overview</h1>
           <p className="text-sm text-[#9aaccc]">
-            Local OpenBB market snapshot. Last update: {overview?.updated_at ? formatDateTime(overview.updated_at) : "Loading..."}
+            Local market snapshot. Last update: {overview?.updated_at ? formatDateTime(overview.updated_at) : "Loading..."}
           </p>
         </div>
         <div className="flex items-center gap-2">

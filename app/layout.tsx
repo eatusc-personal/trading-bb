@@ -3,8 +3,8 @@ import "./globals.css";
 import { AppShell } from "@/components/app-shell";
 
 export const metadata: Metadata = {
-  title: "OpenBB Local Dashboard",
-  description: "Local stock dashboard powered by OpenBB 4.7.1",
+  title: "Trading Dashboard BB",
+  description: "Local market-research dashboard: quotes, technicals, peer-divergence, and social sentiment.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

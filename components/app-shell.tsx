@@ -39,8 +39,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="mb-6 flex items-center gap-2">
             <ChartCandlestick className="text-[#5ec4ff]" size={20} />
             <div>
-              <div className="text-sm text-[#9aaccc]">OpenBB Local</div>
-              <div className="text-lg font-semibold">Trading Dashboard</div>
+              <div className="text-sm text-[#9aaccc]">Market research</div>
+              <div className="text-lg font-semibold">Trading Dashboard BB</div>
             </div>
           </div>
           <nav className="space-y-2">

@@ -93,7 +93,7 @@ export default function WatchlistPage() {
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold">Watchlist</h1>
-        <p className="text-sm text-[#9aaccc]">Stored in browser localStorage and refreshed from your local OpenBB API.</p>
+        <p className="text-sm text-[#9aaccc]">Stored in browser localStorage and refreshed from your local API.</p>
       </div>
 
       <PanelSection>

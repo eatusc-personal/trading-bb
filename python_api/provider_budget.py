@@ -39,8 +39,10 @@ _DEFAULTS: dict[str, tuple[int, int]] = {
     "marketstack": (5, 3),
     # yfinance has no published quota — this is politeness pacing only. Keep it
     # high enough that a cold all-groups divergence pulse (~225 history fetches)
-    # never self-throttles; actual concurrency is capped by worker pools anyway.
-    "yfinance": (240, 0),
+    # PLUS the chart board (up to 9) and normal tab polling in the same minute
+    # never self-throttle; actual concurrency is capped by worker pools and the
+    # history cache anyway. Tune with BUDGET_YFINANCE_PER_MIN (0 = unlimited).
+    "yfinance": (600, 0),
 }
 
 SAFETY_PCT = max(0.1, min(1.0, float(os.getenv("PROVIDER_BUDGET_SAFETY_PCT", "0.9"))))

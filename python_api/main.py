@@ -68,7 +68,7 @@ def load_local_env_files() -> None:
 
 load_local_env_files()
 
-APP_NAME = "OpenBB Local API"
+APP_NAME = "Trading Dashboard BB API"
 DEFAULT_PROVIDER = "yfinance"
 MARKET_DATA_PROVIDER = "router"
 TWELVE_DATA_API_KEY = os.getenv("TWELVE_DATA_API_KEY", "").strip()
