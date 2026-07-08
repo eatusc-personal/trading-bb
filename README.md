@@ -33,15 +33,29 @@ Built on:
 - Python FastAPI layer over an OpenBB install (in `.venv`)
 - One-command development startup with `npm run dev`
 
-## Verified OpenBB 4.7.1 routes used
-- `obb.equity.price.historical(symbol="AAPL", provider="yfinance")`
-- `obb.equity.price.quote(symbol="AAPL", provider="yfinance")`
-- `obb.equity.discovery.gainers(provider="yfinance")`
-- `obb.equity.discovery.losers(provider="yfinance")`
-- `obb.equity.discovery.active(provider="yfinance")`
+## Engineering highlights
 
-Deprecated route not used:
-- `obb.equity.historical(...)`
+- **Peer-divergence scanner** — flags stocks that are *not* moving with their
+  group using a robust **leave-one-out z-score** (median/MAD) over 1D/5D/20D
+  windows, gated by a 60-day **correlation and beta** check vs an equal-weight
+  peer index so habitual independent movers don't false-trigger.
+  (`python_api/divergence.py`)
+- **Resilient market-data layer** — a multi-provider router
+  (TwelveData → FMP → Marketstack → yfinance) with automatic **failover**,
+  per-provider **budget guards** (per-minute/day, SQLite-persisted), and
+  cooldown/backoff on quota or auth failures.
+- **Stale-while-revalidate everywhere** — slow endpoints answer instantly from
+  the last completed result and refresh in a **single-flight** background
+  thread; results persist in SQLite so restarts never cold-start (warm
+  responses 20–200ms).
+- **Social-sentiment signal-lab** — multi-source ingestion (Reddit, Stocktwits,
+  Apewisdom) with ticker extraction, tiered candidate scoring, tradability /
+  liquidity gates, and horizon-based **event-study** backtesting of signals.
+- **Confluence-ranked daily report** — cross-tab synthesis (movers, technical
+  flags, social buzz, peer divergence, headlines, ETFs) ranked by how many
+  independent signals agree.
+- **Hardening** — symbol regex + request size caps, per-IP rate limiting,
+  optional API-key auth, and localhost-scoped CORS.
 
 ## What was built
 
@@ -190,6 +204,11 @@ Open:
 - `http://localhost:3000`
 
 ## Notes / limitations (OpenBB 4.7.1 + provider router)
+
+OpenBB 4.7.1 routes used: `obb.equity.price.historical`, `obb.equity.price.quote`,
+`obb.equity.discovery.{gainers,losers,active}` (the deprecated
+`obb.equity.historical` is not used).
+
 - A single universal screener endpoint with all requested filters is not exposed directly by OpenBB 4.7.1.
 - Screener is implemented by building a practical universe, then calculating technicals locally and filtering server-side.
 - Candlestick charts are implemented via custom SVG components.
