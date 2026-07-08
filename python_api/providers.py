@@ -30,7 +30,7 @@ _quote_provider_auth_cooldown_until = 0.0
 
 def quote_provider_cooldown_remaining_sec() -> int:
     now = time.time()
-    with _social_source_state_lock:
+    with _provider_state_lock:
         until = float(_quote_provider_auth_cooldown_until)
     if until <= now:
         return 0
@@ -38,7 +38,7 @@ def quote_provider_cooldown_remaining_sec() -> int:
 
 def quote_provider_record_auth_failure() -> None:
     now = time.time()
-    with _social_source_state_lock:
+    with _provider_state_lock:
         global _quote_provider_auth_cooldown_until
         _quote_provider_auth_cooldown_until = max(
             float(_quote_provider_auth_cooldown_until),
@@ -46,7 +46,7 @@ def quote_provider_record_auth_failure() -> None:
         )
 
 def quote_provider_record_success() -> None:
-    with _social_source_state_lock:
+    with _provider_state_lock:
         global _quote_provider_auth_cooldown_until
         _quote_provider_auth_cooldown_until = 0.0
 
