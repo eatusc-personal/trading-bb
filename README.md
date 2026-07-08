@@ -1,8 +1,36 @@
-# OpenBB Local Stock Dashboard
+# Trading Dashboard (OpenBB-backed)
 
-Complete local dashboard in this folder using:
+A local, full-stack market-research dashboard: real-time quotes and technicals,
+a **peer-divergence scanner** (leave-one-out z-scores that flag stocks *not*
+moving with their group), a **Reddit/Stocktwits social-sentiment signal-lab**
+with tiered scoring and event studies, screeners, ETF holdings, and consolidated
+news — one Next.js app over a Python FastAPI backend with multi-provider market
+data, per-provider budget guards, and stale-while-revalidate caching.
+
+**Stack:** Next.js 16 (App Router, TypeScript, Tailwind) · Python FastAPI ·
+OpenBB + provider routing (TwelveData / FMP / Marketstack) · SQLite.
+
+## Screenshots
+
+| Market Overview | Divergence Scanner |
+| --- | --- |
+| ![Market overview](docs/media/overview.png) | ![Divergence scanner](docs/media/divergence.png) |
+
+> Add screenshots to `docs/media/` before publishing (run `npm run dev`, then capture the Market and Divergence pages).
+
+## Quickstart
+
+```bash
+git clone https://github.com/eatusc/trading-bb && cd trading-bb
+python3 -m venv .venv && .venv/bin/pip install -r python_api/requirements.txt
+cp .env.example .env       # add at least one market-data provider key
+npm install
+npm run dev                # Next on :3000, Python API on :8001
+```
+
+Built on:
 - Next.js 16 (App Router, TypeScript, Tailwind)
-- Python FastAPI layer using your existing `.venv` OpenBB install
+- Python FastAPI layer over an OpenBB install (in `.venv`)
 - One-command development startup with `npm run dev`
 
 ## Verified OpenBB 4.7.1 routes used
@@ -134,7 +162,7 @@ Includes:
 - Browser calls only Next routes (`/api/...`), so it feels like one app
 
 ## Scripts
-From `/Users/ericlai/Sites/localhost/openbb`:
+From `the repo root`:
 
 - `npm run dev`
   - Starts both:
@@ -153,7 +181,7 @@ From `/Users/ericlai/Sites/localhost/openbb`:
 ## Install / Run
 
 ```bash
-cd /Users/ericlai/Sites/localhost/openbb
+cd trading-bb
 npm install
 npm run dev
 ```
@@ -209,7 +237,7 @@ All persistent state lives in three places (everything else is in-memory cache o
 
 Fresh-machine setup:
 ```bash
-git clone <repo> && cd openbb
+git clone <repo> && cd trading-bb
 python3 -m venv .venv && .venv/bin/pip install -r python_api/requirements.txt
 npm install
 # optional: rsync old machine's python_api/social_baseline.db into python_api/
@@ -293,3 +321,12 @@ curl -s 'http://127.0.0.1:3000/api/security/status' | head -c 500
 curl -s 'http://127.0.0.1:3000/technical' | rg 'Technical View|Recently Searched|MACD'
 curl -s 'http://127.0.0.1:3000/' | rg 'Market Overview|After Hours Movers|Alerts / Flags|Industries'
 ```
+
+## License
+
+This project's own code is licensed **MIT** — see [LICENSE](LICENSE).
+
+It depends on [OpenBB](https://github.com/OpenBB-finance/OpenBB) (installed via
+pip, not vendored here), which is licensed **AGPL-3.0**. Market data is subject
+to each provider's terms (TwelveData, FMP, Marketstack, etc.). This is an
+educational/research tool, not financial advice.

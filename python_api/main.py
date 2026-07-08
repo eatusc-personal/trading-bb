@@ -104,11 +104,11 @@ INDICATOR_DEFAULT_SYMBOLS = [
 SYMBOL_PATTERN = re.compile(r"^[A-Za-z0-9.\-]{1,12}$")
 TICKER_PATTERN = re.compile(r"\$?[A-Za-z]{2,5}\b")
 SOCIAL_SUBREDDITS = ["wallstreetbets", "stocks", "options", "investing", "shortsqueeze"]
-SOCIAL_USER_AGENTS = [
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36",
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0 Safari/537.36",
-]
+# Identify the app honestly instead of impersonating a browser. Public data
+# aggregators should say who they are; spoofing a Chrome UA is both a
+# compliance smell and easy for a source to fingerprint anyway.
+HONEST_USER_AGENT = "trading-bb/1.0 (+https://github.com/eatusc/trading-bb; educational research use)"
+SOCIAL_USER_AGENTS = [HONEST_USER_AGENT]
 SOCIAL_REDDIT_USER_AGENT = os.getenv(
     "REDDIT_USER_AGENT",
     "openbb-local-dashboard/1.0 (by /u/openbb_local_scanner)",
@@ -132,7 +132,9 @@ SOCIAL_SKIP_REDDIT_IF_FALLBACK_READY = os.getenv("SOCIAL_SKIP_REDDIT_IF_FALLBACK
     "off",
     "no",
 }
-INTELLECTIA_API_BASE = os.getenv("INTELLECTIA_API_BASE", "https://api.intellectia.ai").rstrip("/")
+# Third-party news source, OFF by default: the app ships without calling any
+# non-public gateway API. Opt in explicitly by setting INTELLECTIA_API_BASE.
+INTELLECTIA_API_BASE = os.getenv("INTELLECTIA_API_BASE", "").rstrip("/")
 SYMBOL_MASTER_URLS = [
     "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
     "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
@@ -295,10 +297,17 @@ def now_iso() -> str:
     return datetime.now(UTC).isoformat()
 
 
+# Only trust X-Forwarded-For when explicitly running behind a proxy that
+# OVERWRITES it. Otherwise any client can spoof the header to rotate its
+# apparent IP and defeat the per-IP rate limiter.
+TRUST_FORWARDED_FOR = os.getenv("TRUST_FORWARDED_FOR", "0").strip().lower() not in ("", "0", "false", "no")
+
+
 def client_ip(request: FastAPIRequest) -> str:
-    forwarded = str(request.headers.get("x-forwarded-for") or "").strip()
-    if forwarded:
-        return forwarded.split(",")[0].strip() or "unknown"
+    if TRUST_FORWARDED_FOR:
+        forwarded = str(request.headers.get("x-forwarded-for") or "").strip()
+        if forwarded:
+            return forwarded.split(",")[0].strip() or "unknown"
     if request.client and request.client.host:
         return str(request.client.host)
     return "unknown"
@@ -3608,7 +3617,7 @@ def _build_news_headlines(limit: int) -> dict[str, Any]:
         ("SEC Press Releases", "https://www.sec.gov/news/pressreleases.rss"),
     ]
     headers = {
-        "User-Agent": "Mozilla/5.0 (OpenBB-Local-Dashboard)",
+        "User-Agent": HONEST_USER_AGENT,
         "Accept": "application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8",
     }
     rows: list[dict[str, Any]] = []
@@ -3741,7 +3750,7 @@ def _build_news_headlines(limit: int) -> dict[str, Any]:
 
     intellectia_headers = {
         "Accept": "application/json",
-        "User-Agent": "Mozilla/5.0 (OpenBB-Local-Dashboard)",
+        "User-Agent": HONEST_USER_AGENT,
     }
     try:
         flash_payload = fetch_json_url(

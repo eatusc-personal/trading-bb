@@ -1,9 +1,13 @@
 # Program Status
 
+> Solo project. The "phase" model is a self-imposed structure to stage the
+> build, not a team program. Dates are approximate build milestones. "Complete"
+> means feature-complete for that phase's scope; Phase 3's benchmark still uses
+> a seed labeling set (see METRICS.md) rather than a finalized holdout.
+
 ## Snapshot
-- Date: 2026-03-18
-- Current phase: Phase 6 (Complete)
-- Overall status: Complete
+- Current phase: Phase 6
+- Overall status: Feature-complete (solo build)
 
 ## Phase Board
 - Phase 1: Complete

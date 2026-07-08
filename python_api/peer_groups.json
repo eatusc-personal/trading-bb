@@ -301,7 +301,7 @@
         "GLXY",
         "BKKT"
       ],
-      "notes": "Holding crypto or crypto-linked balance-sheet exposure. MSTR best known; SMLR/BKKT speculative."
+      "notes": "Crypto and crypto-linked balance-sheet names (MSTR, SMLR, BKKT)."
     },
     {
       "id": "crypto_exchanges",
@@ -348,7 +348,7 @@
         "PDYN",
         "OPTT"
       ],
-      "notes": "RCAT Black Widow (Army SRR), ONDS counter-UAS/Iron Drone. UMAC/PDYN/OPTT very speculative."
+      "notes": "Tactical drone and counter-UAS names (RCAT, ONDS, UMAC, PDYN, OPTT)."
     },
     {
       "id": "counter_uas",
@@ -431,7 +431,7 @@
         "MRVL",
         "AVGO"
       ],
-      "notes": "Optical engines, interposers, transceivers. LWLG very speculative."
+      "notes": "Optical engines, interposers, transceivers (incl. LWLG)."
     },
     {
       "id": "power_semis",
@@ -448,7 +448,7 @@
         "STM",
         "IFNNY"
       ],
-      "notes": "AI data-center power, EV, grid electrification. WOLF distressed/speculative."
+      "notes": "AI data-center power, EV, and grid electrification names (incl. WOLF)."
     },
     {
       "id": "rf_compound_semis",

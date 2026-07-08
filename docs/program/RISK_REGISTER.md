@@ -1,5 +1,8 @@
 # Risk Register
 
+> This is a solo project. "Owner" below is the single maintainer wearing
+> different hats (backend, quant, platform), not a team.
+
 ## Active Risks
 
 ### R-001: Ingestion compliance drift
@@ -8,7 +11,7 @@
 - Likelihood: Medium
 - Description: Source access terms or enforcement may change and break ingestion.
 - Mitigation: public-endpoint pacing/retry discipline, source policy checks, no production Pushshift.
-- Owner: Backend lead
+- Owner: Maintainer
 
 ### R-002: Source outage concentration
 - Category: Reliability
@@ -16,7 +19,7 @@
 - Likelihood: Medium
 - Description: Single-source outages could degrade rankings.
 - Mitigation: Graceful degradation, source health telemetry, circuit breakers.
-- Owner: Backend lead
+- Owner: Maintainer
 
 ### R-003: False-positive ticker extraction
 - Category: Model quality
@@ -24,7 +27,7 @@
 - Likelihood: High
 - Description: Ambiguous tokens can leak into ranking output.
 - Mitigation: Tiered gating, classifier, symbol master, ambiguity penalties.
-- Owner: Quant/ML owner
+- Owner: Maintainer
 
 ### R-004: Backtest overfitting
 - Category: Research validity
@@ -32,7 +35,7 @@
 - Likelihood: Medium
 - Description: Rules optimized to in-sample behavior may not generalize.
 - Mitigation: Holdout windows, regime slicing, experiment tracking discipline.
-- Owner: Quant/ML owner
+- Owner: Maintainer
 
 ### R-005: Performance regression on heavy endpoints
 - Category: Performance
@@ -40,7 +43,7 @@
 - Likelihood: Medium
 - Description: Additional features may increase latency.
 - Mitigation: layered caching, async fetch strategy, profiling before release.
-- Owner: Platform owner
+- Owner: Maintainer
 
 ## Risk Review Cadence
 - Review active risks weekly.
