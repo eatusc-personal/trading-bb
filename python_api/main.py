@@ -44,6 +44,7 @@ logger = logging.getLogger("openbb_api")
 
 
 from .config import *  # noqa: F401,F403 -- env constants + static data tables
+from .cache import get_cached, set_cached
 
 app = FastAPI(title=APP_NAME, version="1.0.0")
 app.add_middleware(
@@ -54,8 +55,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-_cache: dict[str, tuple[float, Any]] = {}
-_cache_lock = threading.Lock()
 _social_db_lock = threading.Lock()
 _social_source_state_lock = threading.Lock()
 _reddit_rate_lock = threading.Lock()
@@ -153,23 +152,6 @@ async def api_rate_limit_middleware(request: FastAPIRequest, call_next):
             )
 
     return await call_next(request)
-
-
-def get_cached(key: str, ttl_seconds: int) -> Any | None:
-    with _cache_lock:
-        entry = _cache.get(key)
-        if not entry:
-            return None
-        created, value = entry
-        if time.time() - created > ttl_seconds:
-            _cache.pop(key, None)
-            return None
-        return value
-
-
-def set_cached(key: str, value: Any) -> None:
-    with _cache_lock:
-        _cache[key] = (time.time(), value)
 
 
 # ---------------------------------------------------------------------------
