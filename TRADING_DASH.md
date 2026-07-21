@@ -15,7 +15,7 @@ Primary use cases:
 - Multi-chart board window (up to 9 tickers) with candlestick mini-charts, zoom and pan.
 - Watchlist persisted in browser localStorage.
 - Social sentiment scanner (Reddit + Stocktwits enrichment) with confidence/ranking pipeline.
-- Headline news feed aggregation (Reuters + Yahoo RSS).
+- Headline news feed aggregation (MarketWatch, Financial Times, NYTimes Business, Investing.com, SEC press releases).
 
 ## 2) Repository Structure
 
@@ -44,8 +44,7 @@ Primary use cases:
 ├── python_api/
 │   ├── main.py                  # FastAPI app and all backend business logic
 │   └── social_baseline.db       # SQLite baseline store for social scanner normalization
-├── public/                      # Static SVG assets
-├── app.py                       # Legacy Streamlit dashboard (separate from Next app)
+├── public/                      # Static assets
 ├── package.json                 # Node scripts/dependencies
 ├── tsconfig.json                # TS config
 ├── eslint.config.mjs            # ESLint config
@@ -54,7 +53,6 @@ Primary use cases:
 ```
 
 Notes:
-- `app.py` is a standalone Streamlit app and not part of the Next/FastAPI runtime path.
 - `.next`, `.venv`, `node_modules` are environment/build artifacts (excluded above).
 
 ## 3) Runtime Architecture
@@ -325,7 +323,7 @@ Final rank score combines:
 - Returns top movers sorted by absolute % move.
 
 `GET /api/news/headlines?limit=5..60`
-- Aggregates Reuters Business, Reuters Markets, Yahoo RSS.
+- Aggregates MarketWatch Top Stories, Financial Times, NYTimes Business, Investing.com Stocks, and SEC press-release RSS feeds.
 - Deduplicates by URL and sorts by publish timestamp.
 
 `GET /api/ticker/{symbol}/historical?range=`
@@ -430,16 +428,7 @@ Config files:
 - `postcss.config.mjs`: Tailwind PostCSS plugin.
 - `next.config.ts`: currently default/empty config object.
 
-## 13) Legacy Streamlit App (`app.py`)
-
-`app.py` is a separate Streamlit dashboard implementation with:
-- RSI/volume/MA scanner controls in sidebar.
-- OpenBB historical fetch + Plotly candlestick display.
-- Market movers tables.
-
-It is not part of the Next.js UI flow and can be treated as an alternative/legacy local interface.
-
-## 14) Functional Coverage Summary
+## 13) Functional Coverage Summary
 
 Implemented feature set includes:
 - Market overview dashboards with filters.
