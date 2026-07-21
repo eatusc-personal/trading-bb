@@ -6,28 +6,13 @@ A local, full-stack market-research dashboard: real-time quotes and technicals,
 a **peer-divergence scanner** (leave-one-out z-scores that flag stocks *not*
 moving with their group), a **Reddit/Stocktwits social-sentiment signal-lab**
 with tiered scoring and event studies, screeners, ETF holdings, and consolidated
-news — one Next.js app over a Python FastAPI backend with multi-provider market
+news, one Next.js app over a Python FastAPI backend with multi-provider market
 data, per-provider budget guards, and stale-while-revalidate caching.
 
 **Stack:** Next.js 16 (App Router, TypeScript, Tailwind) · Python FastAPI ·
 OpenBB + provider routing (TwelveData / FMP / Marketstack) · SQLite.
 
-## Background
-
-This began as an OpenBB-based dashboard and was re-architected from there. The
-market-data layer was replaced with a custom multi-provider router — direct
-TwelveData/FMP/Marketstack calls with automatic failover and per-provider budget
-guards — and the peer-divergence scanner, social-sentiment signal-lab, and
-stale-while-revalidate caching were built on top. OpenBB is retained as one
-fallback source (discovery + yfinance). The Python backend is split into focused
-modules (`providers`, `news`, `social`, `symbol_master`, `db`, `net`, `config`,
-`indicators`, `utils`, `cache`) with a pytest suite.
-
-## Screenshots
-
-| Market Overview | Divergence Scanner |
-| --- | --- |
-| ![Market overview](docs/media/overview.png) | ![Divergence scanner](docs/media/divergence.png) |
+![Market overview](docs/media/overview.png)
 
 ## Quickstart
 
@@ -39,334 +24,119 @@ npm install
 npm run dev                # Next on :3000, Python API on :8001
 ```
 
-Built on:
-- Next.js 16 (App Router, TypeScript, Tailwind)
-- Python FastAPI layer over an OpenBB install (in `.venv`)
-- One-command development startup with `npm run dev`
+The Next frontend proxies every `/api/*` call to the FastAPI process on
+`127.0.0.1:8001`, so the browser only ever talks to one origin.
 
 ## Engineering highlights
 
-- **Peer-divergence scanner** — flags stocks that are *not* moving with their
-  group using a robust **leave-one-out z-score** (median/MAD) over 1D/5D/20D
-  windows, gated by a 60-day **correlation and beta** check vs an equal-weight
+- **Peer-divergence scanner**: flags stocks that are *not* moving with their
+  group using a robust leave-one-out z-score (median/MAD) over 1D/5D/20D
+  windows, gated by a 60-day correlation and beta check vs an equal-weight
   peer index so habitual independent movers don't false-trigger.
-  (`python_api/divergence.py`)
-- **Resilient market-data layer** — a multi-provider router
-  (TwelveData → FMP → Marketstack → yfinance) with automatic **failover**,
-  per-provider **budget guards** (per-minute/day, SQLite-persisted), and
+  (`python_api/divergence.py`, details below)
+- **Resilient market-data layer**: a multi-provider router
+  (TwelveData, FMP, Marketstack, yfinance) with automatic failover,
+  per-provider budget guards (per-minute/day, SQLite-persisted), and
   cooldown/backoff on quota or auth failures.
-- **Stale-while-revalidate everywhere** — slow endpoints answer instantly from
-  the last completed result and refresh in a **single-flight** background
+- **Stale-while-revalidate everywhere**: slow endpoints answer instantly from
+  the last completed result and refresh in a single-flight background
   thread; results persist in SQLite so restarts never cold-start (warm
-  responses 20–200ms).
-- **Social-sentiment signal-lab** — multi-source ingestion (Reddit, Stocktwits,
+  responses 20-200ms).
+- **Social-sentiment signal-lab**: multi-source ingestion (Reddit, Stocktwits,
   Apewisdom) with ticker extraction, tiered candidate scoring, tradability /
-  liquidity gates, and horizon-based **event-study** backtesting of signals.
-- **Confluence-ranked daily report** — cross-tab synthesis (movers, technical
+  liquidity gates, and horizon-based event-study backtesting of signals.
+- **Confluence-ranked daily report**: cross-tab synthesis (movers, technical
   flags, social buzz, peer divergence, headlines, ETFs) ranked by how many
   independent signals agree.
-- **Hardening** — symbol regex + request size caps, per-IP rate limiting,
+- **Hardening**: symbol regex + request size caps, per-IP rate limiting,
   optional API-key auth, and localhost-scoped CORS.
 
-## What was built
+## How the divergence scanner works
 
-### Frontend pages
-- `/` Market Overview
-  - Top gainers, top losers, most active
-  - Summary cards
-  - Search filter
-  - Manual refresh
-  - Last updated timestamp
-  - Alerts/flags panel
-  - After-hours movers
-  - Industry Divergence chips (click → divergence scan of that peer group)
-- `/charts` Chart Board
-  - Opens in dedicated popup window from ticker clicks
-  - Up to 9 charts
-  - Candlestick mini-charts with volume lane
-  - Last close + visible-range % change per card, link to ticker detail
-  - Mouse wheel zoom + drag pan interactions
-- `/news`
-  - Consolidated headlines from notable free sources
-  - Relative age, source filter chips, $CASHTAG links to ticker detail
-- `/ticker/[symbol]` Ticker Detail
-  - Header + key quote stats
-  - Historical price chart
-  - Volume chart
-  - Range selection: 1M, 3M, 6M, 1Y, 5Y
-  - Price table preview
-  - CSV download
-- `/technical`
-  - RSI(14), SMA20/50/200, MACD
-  - Recently searched ticker section
-  - Deep-linkable: `/technical?symbol=XYZ`
-  - Technical flags:
-    - RSI overbought/oversold
-    - Above 50 SMA
-    - Above 200 SMA
-    - Bullish/bearish 50 SMA crossover
-    - MACD bull/bear cross, unusual volume (RVOL)
-  - Calculation notes section
-- `/screener`
-  - Filters:
-    - ticker contains
-    - min/max price
-    - min volume
-    - min/max % change
-    - RSI min/max
-    - above 20/50/200 SMA yes/no/any
-  - Server-side filtering and sortable result table
-  - Preset buttons (incl. real semiconductor peer list)
-  - "Screen My Watchlist" — run filters against your watchlist symbols
-  - Custom universe via `POST /api/screener` `symbols` field (≤100 symbols)
-  - Table zoom controls
-- `/etfs` Popular ETFs
-  - Top ETFs by volume with industry/category and largest holdings
-  - Holdings modal: clickable holdings, top performers/losers, one-click Divergence Scan of the top-20 holdings vs the ETF
-- `/social`
-  - **Never blocks**: the endpoint serves the last completed scan instantly (stale-while-revalidate); the 30-60s
-    Reddit/Stocktwits scan runs in a single-flight background thread. Data-age badge + auto-polling while refreshing;
-    "Refresh Now" forces a background rescan. Last scan survives restarts (restored from SQLite).
-    Tune with `SOCIAL_RESULT_REFRESH_AFTER_SEC` (default 600 = auto-rescan when data older than 10 min on access).
-  - Compact view by default (toggle Detailed for all columns) + tier filter (All / A+B / A only)
-  - Reddit-first social sentiment scanner
-  - Cross-source enrichment with Stocktwits
-  - Tiered candidate quality (`A/B/C`), mention-quality score, weighted source confirmation
-  - Tradability overlays: liquidity/spread/volatility gates, market-cap bucket, market regime
-  - Catalyst/options overlays: catalyst tags and options context score
-  - Candidate confidence, validation status, explainability fields, and ranking outputs
-- `/watchlist`
-  - Add/remove symbols (multi-add: "AAPL, MSFT NVDA"; validated)
-  - Local persistence via `localStorage`
-  - Live quote refresh
-  - Click-through to ticker detail
-  - One-click Divergence Scan of the whole watchlist (3+ symbols)
-- `/divergence` Divergence Scanner
-  - **Group Pulse**: one click shows every group's median gain/loss over 1D / 1W / 1M plus benchmark and best/worst member — click any group to drill into a full scan
-  - 35 editable peer groups in categories: Industries, Crypto (miners, treasury, exchanges, DC hardware), Defense & Drones (tactical UAS, counter-UAS, naval, defense electronics), Semis & Photonics (photonics, silicon photonics, GaN/SiC, RF, semicap, packaging), My Buckets
-  - Groups are stored in `python_api/peer_groups.json` — edit via the ✎ button / "+ New Group" on the page (or the file directly): name, category, benchmark, members, notes
-  - Scans peer groups and custom stock/ETF sets; flags stocks NOT moving with their peers (robust leave-one-out z-score over 1D/5D/20D windows)
-  - 60-day correlation/beta vs equal-weight peer index filters out habitual independent movers
-  - Plain-English labels: "Held up while group fell", "Lagged group rally", etc.
-  - Deep links: `/divergence?groups=semiconductors` or `?symbols=AAPL,MSFT,...&benchmark=QQQ` (auto-scans)
-  - Backend: `python_api/divergence.py` — `GET/POST /api/divergence/groups`, `PUT/DELETE /api/divergence/groups/{id}`, `GET /api/divergence/overview`, `POST /api/divergence/scan`
+The interesting event in a peer group is usually not the group move itself,
+it is the one member that ignored it. For every scanned set (a curated peer
+group or a custom list) and every window `w` in {1, 5, 20} trading days:
 
-### Python API
-Path: `python_api/main.py`
+1. Compute each member's percent return over the window.
+2. Score each member against its peers with a **leave-one-out robust
+   z-score**: the member is removed, and the remaining peers' median and MAD
+   (median absolute deviation) form the center and scale. That way one big
+   outlier cannot hide itself by dragging the group mean and variance along
+   with it.
 
-Endpoints:
-- `GET /api/health`
-- `GET /api/security/status`
-- `GET /api/market/overview`
-- `GET /api/market/after-hours`
-- `GET /api/news/headlines`
-- `GET /api/ticker/{symbol}/quote`
-- `GET /api/ticker/{symbol}/historical?range=1Y`
-- `GET /api/ticker/{symbol}/technicals?range=1Y`
-- `POST /api/screener`
-- `GET /api/social/sentiment`
-- `GET /api/social/signal-lab/runs`
-- `GET /api/social/signal-lab/run/{run_id}`
-- `GET /api/social/signal-lab/event-study/{run_id}`
-- `GET /api/watchlist/quote?symbols=AAPL,MSFT`
-- `GET /api/alerts`
+   ```
+   z_i = (r_i - median(r_peers)) / (1.4826 * MAD(r_peers))
+   ```
 
-Includes:
-- Symbol validation
-- Error handling with readable messages
-- Graceful empty responses
-- Light in-memory TTL caching
-- Technical indicator calculations in pandas
-- Social baseline persistence in SQLite (`python_api/social_baseline.db`)
-- Source-health diagnostics in social sentiment responses
+   The 1.4826 factor is the usual consistency constant that makes MAD
+   comparable to a standard deviation under normality. If the peers are
+   nearly identical (MAD ~ 0) the scale falls back to their standard
+   deviation, and z is clamped to +/-15 so degenerate windows cannot produce
+   absurd scores.
+3. Decide whether the group actually moved: the flat threshold scales with
+   the window as `0.5 * sqrt(w)` percent, and the sign of the group move plus
+   the sign of z picks a plain-English label ("Held up while group fell",
+   "Lagged group rally", "Moved independently of flat group", ...).
+4. **Gate on 60-day co-movement**: each member's daily returns are correlated
+   (and beta-fit) against the equal-weight mean of the *other* members. A
+   signal is only confirmed as a diverger when `|z| >= 2.0` (configurable)
+   **and** the 60-day correlation is at least 0.30. Low-correlation names
+   still appear with their z-scores but are marked `low_correlation` instead
+   of flagged: a divergence is only interesting when the name normally tracks
+   the group.
 
-## Local Architecture
-- Next frontend runs on `http://localhost:3000`
-- Python API runs on `http://127.0.0.1:8001`
-- Next API routes in `app/api/*` proxy requests to Python API
-- Browser calls only Next routes (`/api/...`), so it feels like one app
+![Divergence scanner](docs/media/divergence.png)
 
-## Scripts
-From `the repo root`:
+Peer groups (35 seeded, across industries, crypto, defense, and photonics)
+live in an editable `python_api/peer_groups.json` and can be managed from the
+UI or the CRUD API under `/api/divergence/groups`.
 
-- `npm run dev`
-  - Starts both:
-    - Next dev server
-    - `./.venv/bin/uvicorn python_api.main:app --reload --host 127.0.0.1 --port 8001`
-- `npm run build`
-- `npm run lint`
-- `npm run typecheck`
-- `npm run metrics:phase3-eval`
-  - Runs Phase 3 holdout benchmark comparison using `docs/program/PHASE3_BENCHMARK.json`
-- `npm run metrics:phase5-event-study`
-  - Runs horizon-based event-study metrics for the latest persisted signal run
-- `npm run metrics:phase6-security`
-  - Runs Phase 6 security checks (status/auth/rate-limit); pass `--api-key` when auth is enabled
+## Background
 
-## Install / Run
+This began as an OpenBB-based dashboard and was re-architected from there. The
+market-data layer was replaced with a custom multi-provider router (direct
+TwelveData/FMP/Marketstack calls with automatic failover and per-provider budget
+guards) and the peer-divergence scanner, social-sentiment signal-lab, and
+stale-while-revalidate caching were built on top. OpenBB is retained as one
+fallback source (discovery + yfinance). The Python backend is split into focused
+modules (`providers`, `news`, `social`, `symbol_master`, `db`, `net`, `config`,
+`indicators`, `utils`, `cache`) with a pytest suite.
 
-```bash
-cd trading-bb
-npm install
-npm run dev
-```
+## Configuration
 
-Open:
-- `http://localhost:3000`
-
-## Notes / limitations (OpenBB 4.7.1 + provider router)
-
-OpenBB 4.7.1 routes used: `obb.equity.price.historical`, `obb.equity.price.quote`,
-`obb.equity.discovery.{gainers,losers,active}` (the deprecated
-`obb.equity.historical` is not used).
-
-- A single universal screener endpoint with all requested filters is not exposed directly by OpenBB 4.7.1.
-- Screener is implemented by building a practical universe, then calculating technicals locally and filtering server-side.
-- Candlestick charts are implemented via custom SVG components.
-- Market data calls use provider routing with fallback and cooldown (`twelvedata`, `fmp`, `marketstack` by default; optional `yfinance` opt-in).
-
-## Social Ingestion Environment (Phase 1)
-Optional env vars for public Reddit ingestion pacing:
-
-```bash
-export REDDIT_USER_AGENT="openbb-local-dashboard/1.0 (by /u/your_reddit_user)"
-export REDDIT_MIN_INTERVAL_SEC="0.8"
-export REDDIT_PUBLIC_LIMIT="25"
-export REDDIT_FETCH_RETRIES="1"
-export REDDIT_BACKOFF_BASE_SEC="0.4"
-export REDDIT_FETCH_TIMEOUT_SEC="2"
-export STOCKTWITS_FETCH_TIMEOUT_SEC="4"
-export STOCKTWITS_TRENDING_TIMEOUT_SEC="4"
-export APEWISDOM_ENABLED="1"
-export APEWISDOM_TIMEOUT_SEC="4"
-export APEWISDOM_MAX_RESULTS="80"
-export SOCIAL_SKIP_REDDIT_IF_FALLBACK_READY="1"
-export SOCIAL_SCAN_TIME_BUDGET_SEC="30"
-export SOCIAL_MAX_STOCKTWITS_SYMBOLS="8"
-export SOCIAL_QUOTE_VALIDATION_ENABLED="0"
-export QUOTE_PROVIDER_AUTH_COOLDOWN_SEC="900"
-```
-
-## Performance Notes
-- **Stale-while-revalidate everywhere**: slow read endpoints (market overview, alerts, after-hours, indicators, news, social) answer instantly from their last completed result and refresh in a single-flight background thread when stale. Results persist in SQLite (`swr_cache`), so restarts never cold-start. Responses include `cache: {age_sec, refreshing, stale}` and pages silently re-poll while a refresh runs. Warm responses are 20-200ms.
-- Per-symbol history fetches are parallelized everywhere (`SCREENER_HISTORY_WORKERS`, default 6): screener, alerts, market indicators, divergence. News RSS feeds fetch concurrently.
-- In-memory TTL caches keep repeat scans nearly free: history `HISTORY_CACHE_TTL_SEC` (600s default), quotes `QUOTE_CACHE_TTL_SEC` (60s), divergence history 30 min.
-- Quote fetches skip market-cap profile enrichment where market cap isn't displayed (`fetch_quote(enrich=False)`).
-- SQLite (`social_baseline.db`) runs in WAL mode; schema DDL runs once per process; retention pruning runs at startup + daily.
-
-## Data Storage & Deployment
-All persistent state lives in three places (everything else is in-memory cache or browser localStorage):
-
-| What | Where | Migrate? |
-|------|-------|----------|
-| Editable divergence peer groups | `python_api/peer_groups.json` | **Commit to git** (small, text, user-curated) |
-| Social baselines (45d), symbol master snapshots, signal-lab runs (14d), after-hours/ETF snapshots, SWR endpoint results, validity/liveness caches | `python_api/social_baseline.db` (SQLite, WAL — also `-wal`/`-shm` sidecars) | Copy **once** via rsync/scp. Do NOT commit — binary, churns on every request. Losing it is non-fatal: caches rebuild, but social buzz baselines take ~30 days to re-learn. |
-| Provider API budget counters (per-day) | `python_api/provider_budget.db` | No — rebuilds daily |
-| API keys / env config | `.env` / `.env.local` | Copy manually (never commit) |
-| Watchlist, chart-board symbols, selected divergence groups | Browser localStorage | Per-browser; re-add or export by hand |
-
-Fresh-machine setup:
-```bash
-git clone <repo> && cd trading-bb
-python3 -m venv .venv && .venv/bin/pip install -r python_api/requirements.txt
-npm install
-# optional: rsync old machine's python_api/social_baseline.db into python_api/
-npm run dev          # or production: npm run build && PORT=3500 npm run start  (+ uvicorn without --reload)
-```
-
-## Provider Budget Guard
-Per-provider request budgets prevent free-tier limits from ever being exceeded
-(`python_api/provider_budget.py`). Daily usage persists in SQLite across restarts.
-Defaults (scaled by `PROVIDER_BUDGET_SAFETY_PCT`, default 0.9): twelvedata 8/min + 800/day,
-fmp 10/min + 250/day, marketstack 5/min + 3/day, yfinance 30/min pacing.
-Override per provider: `BUDGET_TWELVEDATA_PER_DAY=800`, `BUDGET_FMP_PER_MIN=5`, etc. (0 = unlimited).
-When a provider's budget is exhausted the router skips to the next provider instead of burning quota.
-Inspect live usage: `GET /api/providers/budget`. Cache TTLs are env-tunable:
-`HISTORY_CACHE_TTL_SEC` (default 600), `QUOTE_CACHE_TTL_SEC` (default 60).
-
-Market data provider routing env vars:
-
-```bash
-export TWELVE_DATA_API_KEY="..."
-export FMP_API_KEY="..."
-export MARKETSTACK_API_KEY="..."
-export QUOTE_PROVIDER_PRIORITY="twelvedata,fmp,marketstack"
-export HISTORY_PROVIDER_PRIORITY="twelvedata,fmp,marketstack"
-export ENABLE_YFINANCE="0"
-export DISCOVERY_PROVIDER=""
-export MARKET_DATA_PROVIDER_COOLDOWN_SEC="180"
-export MARKET_DATA_TIMEOUT_SEC="8"
-export SCREENER_UNIVERSE_SYMBOLS="AAPL,MSFT,NVDA,TSLA,AMZN,META,GOOGL,SPY,QQQ"
-```
-
-The Python API also auto-loads these vars from `.env` / `.env.local` in either:
-- repo root (`./.env`, `./.env.local`)
-- `python_api/` (`python_api/.env`, `python_api/.env.local`)
-
-Starter template: `.env.example`
-
-Behavior:
-- Uses low-rate public Reddit listing endpoints.
-- Applies pacing + retry/backoff to reduce transient failures.
-- Adds fast fallback sources (`apewisdom` + Stocktwits trending) and can skip Reddit when fallback is ready.
-- Quote/history calls auto-rotate providers based on priority and temporary cooldown on quota/auth failures.
-- Yahoo (`yfinance`) is disabled by default. Set `ENABLE_YFINANCE="1"` and include `yfinance` in priority lists only if your account has access.
-- If you use OpenBB discovery endpoints directly for universe-building, keep `DISCOVERY_PROVIDER=""` (auto/default) or set a provider you can access.
-- Pushshift is disabled in production ingestion flow.
-
-Optional TikTok provider hook (no scraping):
-
-```bash
-export TIKTOK_PROVIDER_URL="https://your-provider-endpoint"
-export TIKTOK_PROVIDER_API_KEY="your_api_key"
-export TIKTOK_PROVIDER_TIMEOUT_SEC="10"
-```
-
-If configured, TikTok rows are merged into social sentiment scoring as source `tiktok`.
-
-## Security Hardening Environment (Phase 6)
-Optional env vars:
-
-```bash
-export CORS_ALLOW_ORIGINS="http://localhost:3000,http://127.0.0.1:3000"
-export SOCIAL_API_KEY="replace_with_strong_secret"
-export API_RATE_LIMIT_WINDOW_SEC="60"
-export API_RATE_LIMIT_MAX_REQUESTS="300"
-export SOCIAL_RATE_LIMIT_WINDOW_SEC="60"
-export SOCIAL_RATE_LIMIT_MAX_REQUESTS="120"
-```
-
-Notes:
-- If `SOCIAL_API_KEY` is set, `/api/social/*` endpoints require auth.
-- Next proxy forwards `SOCIAL_API_KEY` to Python API automatically in server-side requests.
+`.env.example` is the starting template; the API auto-loads `.env` /
+`.env.local` from the repo root or `python_api/`. Provider keys, router
+priorities, budget overrides, cache TTLs, social-ingestion pacing, and the
+optional security hardening knobs (API key, rate limits, CORS) are all
+environment variables; see [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for
+the full reference, the data-storage map, and the smoke-test runbook.
 
 ## Tests
 
 ```bash
 .venv/bin/pip install -r requirements-dev.txt
-.venv/bin/python -m pytest        # 15 tests, ~6s
+.venv/bin/python -m pytest
 ```
 
 `tests/` covers the pure indicator math (SMA/RSI/MACD/RVOL + trigger flags),
-the per-provider budget guard (limits, env overrides, exhaustion), and endpoint
-smoke tests (health, security status, symbol validation) via FastAPI's
-`TestClient` — all offline, no market-data calls.
+the divergence scanner math (robust z-score, window returns, correlation
+gating, labels), social scoring helpers, the per-provider budget guard, and
+endpoint smoke tests via FastAPI's `TestClient`, all offline, no market-data
+calls. CI runs pytest, ruff, and a full frontend type-check + build.
 
-## Smoke Test Runbook
-After `npm run dev`, verify key routes:
+## More documentation
 
-```bash
-curl -s 'http://127.0.0.1:3000/api/market/overview' | head -c 400
-curl -s 'http://127.0.0.1:3000/api/news/headlines?limit=10' | head -c 400
-curl -s 'http://127.0.0.1:3000/api/social/sentiment?limit=5' | head -c 600
-curl -s 'http://127.0.0.1:3000/api/security/status' | head -c 500
-curl -s 'http://127.0.0.1:3000/technical' | rg 'Technical View|Recently Searched|MACD'
-curl -s 'http://127.0.0.1:3000/' | rg 'Market Overview|After Hours Movers|Alerts / Flags|Industries'
-```
+- [docs/FEATURES.md](docs/FEATURES.md): the full per-page feature list and
+  backend endpoint inventory.
+- [docs/PROGRESS.md](docs/PROGRESS.md): engineering journal (dated notes on
+  what changed and why, with measurements).
+- [TRADING_DASH.md](TRADING_DASH.md): technical + functional specification.
+- [docs/CONFIGURATION.md](docs/CONFIGURATION.md): environment variables,
+  provider budgets, persistence/deployment notes.
 
 ## License
 
-This project's own code is licensed **MIT** — see [LICENSE](LICENSE).
+This project's own code is licensed **MIT**, see [LICENSE](LICENSE).
 
 It depends on [OpenBB](https://github.com/OpenBB-finance/OpenBB) (installed via
 pip, not vendored here), which is licensed **AGPL-3.0**. Market data is subject
