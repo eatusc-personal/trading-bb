@@ -1,0 +1,23 @@
+# Ruff configuration for the Python backend. Deliberately minimal: the default
+# rule set (pyflakes + core pycodestyle errors) with targeted ignores for
+# patterns the codebase uses on purpose.
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+# The backend modules share lexicons/env knobs via deliberate
+# `from .config import *` imports (noqa'd F401/F403 at the import sites);
+# F405 would otherwise flag every use of those names.
+ignore = ["F405"]
+
+[tool.ruff.lint.per-file-ignores]
+# main.py sets up logging before its relative imports (E402) and, together
+# with the modules extracted from it, still carries imports kept for
+# compatibility during the decomposition (F401). Pruning those is deferred to
+# the planned main.py refactor rather than mass-edited here.
+"python_api/main.py" = ["E402", "F401"]
+"python_api/news.py" = ["F401"]
+"python_api/providers.py" = ["F401"]
+"python_api/social.py" = ["F401"]
+"python_api/symbol_master.py" = ["F401"]

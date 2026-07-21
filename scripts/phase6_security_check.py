@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import time
 from datetime import UTC, datetime
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
