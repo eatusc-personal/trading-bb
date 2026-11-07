@@ -4,6 +4,7 @@ and OpenBB stderr silencing. No app, config, or provider state."""
 from __future__ import annotations
 
 import io
+import json
 import math
 from contextlib import redirect_stderr, redirect_stdout
 from datetime import UTC, datetime
@@ -51,3 +52,26 @@ def call_openbb_silenced(fn: Any, *args: Any, **kwargs: Any) -> Any:
 def finite_or(value: Any, fallback: float = 0.0) -> float:
     parsed = to_float(value)
     return parsed if parsed is not None else float(fallback)
+
+
+def parse_iso_dt(value: str | None) -> datetime | None:
+    raw = str(value or "").strip()
+    if not raw:
+        return None
+    try:
+        return datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+
+def parse_json_array(value: str | None) -> list[dict[str, Any]]:
+    raw = str(value or "").strip()
+    if not raw:
+        return []
+    try:
+        parsed = json.loads(raw)
+        if isinstance(parsed, list):
+            return [item for item in parsed if isinstance(item, dict)]
+        return []
+    except Exception:
+        return []

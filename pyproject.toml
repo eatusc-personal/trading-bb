@@ -12,11 +12,10 @@ target-version = "py312"
 ignore = ["F405"]
 
 [tool.ruff.lint.per-file-ignores]
-# main.py sets up logging before its relative imports (E402) and, together
-# with the modules extracted from it, still carries imports kept for
-# compatibility during the decomposition (F401). Pruning those is deferred to
-# the planned main.py refactor rather than mass-edited here.
-"python_api/main.py" = ["E402", "F401"]
+# main.py sets up logging before its relative imports (E402). The modules
+# below still carry imports kept for compatibility from the earlier
+# decomposition of main.py (F401).
+"python_api/main.py" = ["E402"]
 "python_api/news.py" = ["F401"]
 "python_api/providers.py" = ["F401"]
 "python_api/social.py" = ["F401"]
