@@ -2,7 +2,7 @@
 
 A tiny thread-safe {key: (created_ts, value)} store behind get_cached/set_cached.
 The heavier stale-while-revalidate layer (SQLite-backed, single-flight) lives in
-main.py and builds on top of these primitives.
+swr.py.
 """
 
 from __future__ import annotations
