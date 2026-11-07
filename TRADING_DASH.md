@@ -42,7 +42,9 @@ Primary use cases:
 │   ├── api.ts                   # Browser GET/POST helpers
 │   └── proxy.ts                 # Next->Python API proxy helper
 ├── python_api/
-│   ├── main.py                  # FastAPI app and all backend business logic
+│   ├── main.py                  # FastAPI app, middleware and router wiring
+│   ├── routers/                 # One APIRouter per API area
+│   ├── *.py                     # Service modules (market data, social scan, ETFs, ...)
 │   └── social_baseline.db       # SQLite baseline store for social scanner normalization
 ├── public/                      # Static assets
 ├── package.json                 # Node scripts/dependencies
@@ -216,7 +218,7 @@ Proxy behavior (`lib/proxy.ts`):
 
 ## 6) Backend (FastAPI) Technical Design
 
-File: `python_api/main.py` (~1600 lines)
+Files: `python_api/main.py` (app wiring), `python_api/routers/` (endpoints) and the service modules beside them
 
 ### 6.1 Core Dependencies and Patterns
 - FastAPI for HTTP API.

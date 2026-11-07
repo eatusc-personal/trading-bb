@@ -108,9 +108,14 @@ it readable. See [TRADING_DASH.md](../TRADING_DASH.md) for the technical spec.
 
 ## Python API
 
-Path: `python_api/main.py` (routes), with the domain logic split across
-`providers`, `news`, `social`, `divergence`, `symbol_master`, `indicators`,
-`provider_budget`, `db`, `net`, `cache`, `config`, `utils`.
+Path: `python_api/main.py` (app, middleware, startup hook) with the endpoints
+in `python_api/routers/` (`system`, `symbol_master`, `market`, `ticker`,
+`screener`, `social`, `etfs`, `watchlist`, `alerts`) and the domain logic split
+across `market_data`, `market_research`, `after_hours`, `quote_validation`,
+`social_scan`, `social_refresh`, `social_store`, `etfs`, `swr`, `retention`,
+`security`, `providers`, `news`, `social`, `divergence`, `report`,
+`symbol_master`, `indicators`, `provider_budget`, `db`, `net`, `cache`,
+`config`, `utils`.
 
 Endpoints:
 

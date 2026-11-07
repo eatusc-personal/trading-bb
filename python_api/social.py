@@ -1,6 +1,6 @@
 """Social-sentiment layer: sentiment/ticker lexicon helpers and the source
 scrapers (Reddit, Stocktwits, Apewisdom, optional TikTok). Moved verbatim from
-main.py; the ranking/build pipeline stays in main and calls these."""
+main.py; the ranking/build pipeline lives in social_scan.py and calls these."""
 
 from __future__ import annotations
 
