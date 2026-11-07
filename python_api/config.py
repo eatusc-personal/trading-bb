@@ -83,7 +83,7 @@ SOCIAL_SUBREDDITS = ["wallstreetbets", "stocks", "options", "investing", "shorts
 # Identify the app honestly instead of impersonating a browser. Public data
 # aggregators should say who they are; spoofing a Chrome UA is both a
 # compliance smell and easy for a source to fingerprint anyway.
-HONEST_USER_AGENT = "trading-bb/1.0 (+https://github.com/eatusc/trading-bb; educational research use)"
+HONEST_USER_AGENT = "trading-bb/1.0 (+https://github.com/eatusc-personal/trading-bb; educational research use)"
 SOCIAL_USER_AGENTS = [HONEST_USER_AGENT]
 SOCIAL_REDDIT_USER_AGENT = os.getenv(
     "REDDIT_USER_AGENT",

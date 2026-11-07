@@ -1,6 +1,6 @@
 # Trading Dashboard (OpenBB-backed)
 
-[![CI](https://github.com/eatusc/trading-bb/actions/workflows/ci.yml/badge.svg)](https://github.com/eatusc/trading-bb/actions/workflows/ci.yml)
+[![CI](https://github.com/eatusc-personal/trading-bb/actions/workflows/ci.yml/badge.svg)](https://github.com/eatusc-personal/trading-bb/actions/workflows/ci.yml)
 
 A local, full-stack market-research dashboard: real-time quotes and technicals,
 a **peer-divergence scanner** (leave-one-out z-scores that flag stocks *not*
@@ -17,7 +17,7 @@ OpenBB + provider routing (TwelveData / FMP / Marketstack) · SQLite.
 ## Quickstart
 
 ```bash
-git clone https://github.com/eatusc/trading-bb && cd trading-bb
+git clone https://github.com/eatusc-personal/trading-bb && cd trading-bb
 python3 -m venv .venv && .venv/bin/pip install -r python_api/requirements.txt
 cp .env.example .env       # add at least one market-data provider key
 npm install
