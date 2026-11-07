@@ -4,7 +4,7 @@ Generalizes every tab's live numbers for the day into one view:
 
 - Pulls the SAME cached results the individual tabs serve (market overview,
   after-hours, alerts, news, market indicators, social sentiment, divergence
-  group pulse, popular ETFs) — riding the existing swr_serve keys, so building
+  group pulse, popular ETFs): riding the existing swr_serve keys, so building
   a report is nearly free when the tabs are warm and never re-pings providers.
 - Cross-references symbols across sources into a per-symbol signal list, scores
   the confluence (a symbol flagged by several independent sources outranks a
@@ -71,7 +71,7 @@ class _Signals:
             return
         entries = self.by_symbol.get(sym, [])
         if any(e["source"] == source and e["reason"] == reason for e in entries):
-            return  # discovery lists can repeat a symbol — count each signal once
+            return  # discovery lists can repeat a symbol: count each signal once
         self.by_symbol.setdefault(sym, []).append(
             {"source": source, "points": round(float(points), 1), "reason": reason, "dir": int(direction)}
         )
@@ -324,7 +324,7 @@ def _build_report() -> dict[str, Any]:
     opportunities = opportunities[:MAX_OPPORTUNITIES]
 
     # Symbols flagged only by price-less sources (divergence, social, news)
-    # have no quote yet — fill the shortlist with one batched fetch.
+    # have no quote yet: fill the shortlist with one batched fetch.
     missing = [o["symbol"] for o in opportunities if o["price"] is None]
     if missing:
         try:
@@ -337,7 +337,7 @@ def _build_report() -> dict[str, Any]:
                     opp["percent_change"] = (
                         round(_f(quote.get("change_pct")), 2) if _f(quote.get("change_pct")) is not None else None
                     )
-                    # symbol_signals was built before enrichment — keep the
+                    # symbol_signals was built before enrichment: keep the
                     # watchlist-overlay fallback prices in sync too.
                     entry = symbol_signals.get(opp["symbol"])
                     if entry is not None:

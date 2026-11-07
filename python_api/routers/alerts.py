@@ -31,7 +31,7 @@ def _build_alerts(symbols: str | None) -> dict[str, Any]:
                     universe.append(sym)
         universe = sorted(set(universe))
 
-    # Fetch all histories in parallel — sequential fetching made this the slowest
+    # Fetch all histories in parallel: sequential fetching made this the slowest
     # endpoint on the Market tab (each cold history call is a provider round-trip).
     capped = universe[:40]
     histories: dict[str, pd.DataFrame] = {}
@@ -95,7 +95,7 @@ def _build_alerts(symbols: str | None) -> dict[str, Any]:
 @router.get("/api/alerts")
 def alerts(symbols: str | None = Query(default=None)) -> dict[str, Any]:
     if symbols:
-        # Explicit symbol lists compute live — histories are cached, so this is fast.
+        # Explicit symbol lists compute live: histories are cached, so this is fast.
         return _build_alerts(symbols)
     payload, meta = swr_serve("alerts:default", lambda: _build_alerts(None), refresh_after_sec=120)
     return {**payload, "cache": meta}

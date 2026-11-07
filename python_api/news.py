@@ -55,7 +55,7 @@ def _build_news_headlines(limit: int) -> dict[str, Any]:
         "securities",
     }
 
-    # Fetch all feeds concurrently — sequentially this was the slowest part of
+    # Fetch all feeds concurrently: sequentially this was the slowest part of
     # the News tab (5 feeds x up to 8s timeout each).
     def _fetch_feed(url: str) -> bytes:
         req = UrlRequest(url, headers=headers)

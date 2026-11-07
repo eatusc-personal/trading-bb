@@ -18,7 +18,7 @@ def _social_db_conn() -> sqlite3.Connection:
     conn = sqlite3.connect(SOCIAL_BASELINE_DB)
     conn.execute("PRAGMA busy_timeout = 5000")
     if _social_db_schema_ready:
-        # Schema DDL already ran this process — skip ~15 statements per open.
+        # Schema DDL already ran this process: skip ~15 statements per open.
         return conn
     conn.execute("PRAGMA journal_mode = WAL")
     conn.execute(

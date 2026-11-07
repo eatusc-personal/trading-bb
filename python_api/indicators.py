@@ -1,6 +1,6 @@
 """Technical indicators and trigger flags.
 
-Pure pandas/numpy functions extracted from main.py — no module-level state,
+Pure pandas/numpy functions extracted from main.py: no module-level state,
 config, or I/O, so they're trivially unit-testable. Given an OHLCV frame they
 compute SMA/RSI/MACD/RVOL and derive the technical trigger flags and labels the
 screener, alerts, and /technical endpoints surface.

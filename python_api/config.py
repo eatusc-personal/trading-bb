@@ -234,7 +234,7 @@ SOCIAL_QUOTE_VALIDATION_ENABLED = os.getenv("SOCIAL_QUOTE_VALIDATION_ENABLED", "
 }
 QUOTE_PROVIDER_AUTH_COOLDOWN_SEC = int(os.getenv("QUOTE_PROVIDER_AUTH_COOLDOWN_SEC", "900"))
 SCREENER_HISTORY_WORKERS = int(os.getenv("SCREENER_HISTORY_WORKERS", "6"))
-# Daily OHLCV barely changes intraday — cache aggressively to conserve provider quota.
+# Daily OHLCV barely changes intraday: cache aggressively to conserve provider quota.
 HISTORY_CACHE_TTL_SEC = int(os.getenv("HISTORY_CACHE_TTL_SEC", "600"))
 QUOTE_CACHE_TTL_SEC = int(os.getenv("QUOTE_CACHE_TTL_SEC", "60"))
 

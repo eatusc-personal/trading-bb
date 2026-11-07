@@ -211,7 +211,7 @@ def fetch_quote(symbols: list[str], ttl: int | None = None, enrich: bool = True)
     """Fetch quotes via the provider router.
 
     enrich=False skips the market-cap profile enrichment (an extra yfinance
-    round-trip) — use it for callers that don't display/filter on market cap
+    round-trip): use it for callers that don't display/filter on market cap
     (ticker page, watchlist, screener, liveness checks).
     """
     if ttl is None:

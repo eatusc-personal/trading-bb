@@ -87,7 +87,7 @@ def run_social_sentiment_scan(
     """The heavy live scan (Reddit + Stocktwits + ApeWisdom with pacing).
 
     Can take 30-60s of wall-clock network time, so it is only ever called from
-    the background refresher in the /api/social/sentiment endpoint below —
+    the background refresher behind /api/social/sentiment (routers/social.py),
     never directly on a request path.
     """
     exp = (experiment_id or "").strip()

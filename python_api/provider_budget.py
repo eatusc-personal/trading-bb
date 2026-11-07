@@ -1,7 +1,7 @@
 """Per-provider request budgets so free-tier API limits are never exceeded.
 
 Tracks two windows per provider:
-- per-minute: in-memory sliding window (resets on process restart, which is safe —
+- per-minute: in-memory sliding window (resets on process restart, which is safe:
   a restart can only make us more conservative within the minute).
 - per-day (UTC): persisted in SQLite so uvicorn --reload restarts and dev cycles
   don't reset the daily counter.
@@ -37,7 +37,7 @@ _DEFAULTS: dict[str, tuple[int, int]] = {
     "twelvedata": (8, 800),
     "fmp": (10, 250),
     "marketstack": (5, 3),
-    # yfinance has no published quota — this is politeness pacing only. Keep it
+    # yfinance has no published quota: this is politeness pacing only. Keep it
     # high enough that a cold all-groups divergence pulse (~225 history fetches)
     # PLUS the chart board (up to 9) and normal tab polling in the same minute
     # never self-throttle; actual concurrency is capped by worker pools and the

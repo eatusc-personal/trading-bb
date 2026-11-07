@@ -20,8 +20,8 @@ logger = logging.getLogger("openbb_api")
 # ---------------------------------------------------------------------------
 # Stale-while-revalidate serving for the social scanner.
 #
-# The live scan above takes 30-60s (paced Reddit + Stocktwits + ApeWisdom),
-# which is longer than any sane browser/proxy timeout — serving it inline is
+# The live scan (run_social_sentiment_scan in social_scan.py) takes 30-60s (paced Reddit + Stocktwits + ApeWisdom),
+# which is longer than any sane browser/proxy timeout: serving it inline is
 # why the Social tab used to time out. Instead the endpoint always answers
 # instantly from the last completed scan and refreshes in the background:
 #   - result older than SOCIAL_RESULT_REFRESH_AFTER_SEC (default 10 min) or

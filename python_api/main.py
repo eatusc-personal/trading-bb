@@ -129,14 +129,14 @@ app.include_router(watchlist_routes.router)
 app.include_router(alerts_routes.router)
 
 # ---------------------------------------------------------------------------
-# Divergence scanner (peer-group outlier detection) — see python_api/divergence.py
+# Divergence scanner (peer-group outlier detection), see python_api/divergence.py
 # ---------------------------------------------------------------------------
 from .divergence import router as divergence_router  # noqa: E402
 
 app.include_router(divergence_router)
 
 # ---------------------------------------------------------------------------
-# Daily cross-tab report (confluence-ranked opportunities) — python_api/report.py
+# Daily cross-tab report (confluence-ranked opportunities), see python_api/report.py
 # ---------------------------------------------------------------------------
 from .report import router as report_router  # noqa: E402
 

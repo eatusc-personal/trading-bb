@@ -65,7 +65,7 @@ def social_sentiment(
             "source_counts": {},
             "source_health": {},
             "errors": ({"scan": str(last_error)} if last_error else {}),
-            "notes": {"status": "First scan is running in the background — results appear here automatically."},
+            "notes": {"status": "First scan is running in the background. Results appear here automatically."},
             "cache": cache_meta,
         }
 

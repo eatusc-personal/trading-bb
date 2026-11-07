@@ -8,7 +8,7 @@ industry group, a custom list of stocks/ETFs, or sector ETFs vs SPY) it computes
 - a robust z-score per member per window: leave-one-out median/MAD of the peer
   returns, so one big outlier can't hide itself by dragging the group stats,
 - a 60-day correlation and beta of each member vs the equal-weight peer index
-  (excluding itself) — a divergence is only interesting when the name normally
+  (excluding itself): a divergence is only interesting when the name normally
   tracks the group, so low-correlation members are reported but not flagged,
 - a plain-English label ("Held up while group fell", "Lagged group rally", ...).
 
@@ -25,7 +25,7 @@ POST /api/divergence/scan              full divergence scan
 
 Price data comes through main.fetch_history / main.fetch_quote, so it shares the
 provider router, the in-memory cache and the per-provider budget guard. History
-is cached for 30 minutes here — divergence works on daily closes, so there is no
+is cached for 30 minutes here: divergence works on daily closes, so there is no
 reason to re-ping providers more often than that.
 """
 
@@ -493,7 +493,7 @@ def _robust_z(value: float, peers: list[float]) -> float | None:
     mad = float((s - median).abs().median())
     scale = 1.4826 * mad
     if scale < 1e-6:
-        # Degenerate (peers all identical) — fall back to std.
+        # Degenerate (peers all identical): fall back to std.
         std = float(s.std(ddof=0))
         if std < 1e-6:
             return None
