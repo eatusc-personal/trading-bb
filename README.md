@@ -1,8 +1,8 @@
-# Trading Dashboard (OpenBB-backed)
+# trading-bb
 
 [![CI](https://github.com/eatusc-personal/trading-bb/actions/workflows/ci.yml/badge.svg)](https://github.com/eatusc-personal/trading-bb/actions/workflows/ci.yml)
 
-A local, full-stack market-research dashboard: real-time quotes and technicals,
+A local, full-stack market-research dashboard: quotes and technicals,
 a **peer-divergence scanner** (leave-one-out z-scores that flag stocks *not*
 moving with their group), a **Reddit/Stocktwits social-sentiment signal-lab**
 with tiered scoring and event studies, screeners, ETF holdings, and consolidated
@@ -140,5 +140,5 @@ This project's own code is licensed **MIT**, see [LICENSE](LICENSE).
 
 It depends on [OpenBB](https://github.com/OpenBB-finance/OpenBB) (installed via
 pip, not vendored here), which is licensed **AGPL-3.0**. Market data is subject
-to each provider's terms (TwelveData, FMP, Marketstack, etc.). This is an
-educational/research tool, not financial advice.
+to each provider's terms (TwelveData, FMP, Marketstack, etc.). This is a
+personal research tool, not financial advice.
